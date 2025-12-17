@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>VPN Checker — оценка надёжности VPN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .question {
+      margin-bottom: 15px;
+    }
+    .question label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 6px;
+    }
+    .good {
+      background-color: #d4edda;
+    }
+    .medium {
+      background-color: #fff3cd;
+    }
+    .bad {
+      background-color: #f8d7da;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>VPN Checker</h1>
+    <p>Ответьте на вопросы ниже, чтобы оценить надёжность VPN-сервиса.</p>
+
+    <div id="questions"></div>
+
+    <button onclick="calculateScore()">Оценить VPN</button>
+
+    <div id="result" class="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    const questions = [
+      { text: 'Есть ли у VPN строгая политика отсутствия логов (No-Logs)?', weight: 5 },
+      { text: 'Подтверждена ли политика конфиденциальности независимым аудитом?', weight: 4 },
+      { text: 'Использует ли VPN современные протоколы (OpenVPN, WireGuard, IKEv2)?', weight: 5 },
+      { text: 'Применяется ли шифрование AES-256 или ChaCha20?', weight: 5 },
+      { text: 'Есть ли функция аварийного отключения (Kill Switch)?', weight: 4 },
+      { text: 'Защищает ли VPN от DNS- и WebRTC-утечек?', weight: 4 },
+      { text: 'Зарегистрирована ли компания вне стран альянса 14 Eyes?', weight: 3 }
+    ];
+
+    const questionsContainer = document.getElementById('questions');
+
+    questions.forEach((q, index) => {
+      const div = document.createElement('div');
+      div.className = 'question';
+      div.innerHTML = `
+        <label>${q.text}</label>
+        <input type="radio" name="q${index}" value="yes"> Да
+        <input type="radio" name="q${index}" value="no"> Нет
+        <input type="radio" name="q${index}" value="unknown"> Не знаю
+      `;
+      questionsContainer.appendChild(div);
+    });
+
+    function calculateScore() {
+      let score = 30;
+
+      questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (selected) {
+          if (selected.value === 'unknown') {
+            score -= q.weight;
+          } else if (selected.value === 'no') {
+            score -= q.weight;
+          }
+        }
+      });
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'block';
+
+      if (score >= 20) {
+        resultDiv.className = 'result good';
+        resultDiv.innerHTML = `<strong>Результат:</strong> VPN можно считать надёжным.<br>Итоговый балл: ${score}`;
+      } else if (score >= 10) {
+        resultDiv.className = 'result medium';
+        resultDiv.innerHTML = `<strong>Результат:</strong> VPN условно надёжен, присутствуют риски.<br>Итоговый балл: ${score}`;
+      } else {
+        resultDiv.className = 'result bad';
+        resultDiv.innerHTML = `<strong>Результат:</strong> Использование VPN небезопасно.<br>Итоговый балл: ${score}`;
+      }
+    }
+  </script>
+</body>
+</html>

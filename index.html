@@ -41,15 +41,9 @@
       padding: 15px;
       border-radius: 6px;
     }
-    .good {
-      background-color: #d4edda;
-    }
-    .medium {
-      background-color: #fff3cd;
-    }
-    .bad {
-      background-color: #f8d7da;
-    }
+    .good { background-color: #d4edda; }
+    .medium { background-color: #fff3cd; }
+    .bad { background-color: #f8d7da; }
   </style>
 </head>
 <body>
@@ -62,7 +56,7 @@
     <button onclick="calculateScore()">Оценить VPN</button>
     <button onclick="resetForm()" id="resetBtn" style="display:none">Пройти ещё раз</button>
 
-    <div id="result" class="result" style="display: none;"></div>
+    <div id="result" class="result" style="display:none"></div>
   </div>
 
   <script>
@@ -93,7 +87,6 @@
     function calculateScore() {
       let score = 30;
 
-      
       for (let i = 0; i < questions.length; i++) {
         const selected = document.querySelector(`input[name="q${i}"]:checked`);
         if (!selected) {
@@ -135,23 +128,6 @@
 
       document.getElementById('result').style.display = 'none';
       document.getElementById('resetBtn').style.display = 'none';
-    }
-}
-      });
-
-      const resultDiv = document.getElementById('result');
-      resultDiv.style.display = 'block';
-
-      if (score >= 20) {
-        resultDiv.className = 'result good';
-        resultDiv.innerHTML = `<strong>Результат:</strong> VPN можно считать надёжным.<br>Итоговый балл: ${score}`;
-      } else if (score >= 10) {
-        resultDiv.className = 'result medium';
-        resultDiv.innerHTML = `<strong>Результат:</strong> VPN условно надёжен, присутствуют риски.<br>Итоговый балл: ${score}`;
-      } else {
-        resultDiv.className = 'result bad';
-        resultDiv.innerHTML = `<strong>Результат:</strong> Использование VPN небезопасно.<br>Итоговый балл: ${score}`;
-      }
     }
   </script>
 </body>

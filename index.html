@@ -60,6 +60,7 @@
     <div id="questions"></div>
 
     <button onclick="calculateScore()">Оценить VPN</button>
+    <button onclick="resetForm()" id="resetBtn" style="display:none">Пройти ещё раз</button>
 
     <div id="result" class="result" style="display: none;"></div>
   </div>
@@ -92,15 +93,50 @@
     function calculateScore() {
       let score = 30;
 
+      
+      for (let i = 0; i < questions.length; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!selected) {
+          alert('Пожалуйста, ответьте на все вопросы перед оценкой VPN.');
+          return;
+        }
+      }
+
       questions.forEach((q, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        if (selected) {
-          if (selected.value === 'unknown') {
-            score -= q.weight;
-          } else if (selected.value === 'no') {
-            score -= q.weight;
-          }
+        if (selected.value === 'unknown' || selected.value === 'no') {
+          score -= q.weight;
         }
+      });
+
+      const resultDiv = document.getElementById('result');
+      const resetBtn = document.getElementById('resetBtn');
+
+      resultDiv.style.display = 'block';
+      resetBtn.style.display = 'inline-block';
+
+      if (score >= 20) {
+        resultDiv.className = 'result good';
+        resultDiv.innerHTML = `<strong>Результат:</strong> VPN можно считать надёжным.<br>Итоговый балл: ${score}`;
+      } else if (score >= 10) {
+        resultDiv.className = 'result medium';
+        resultDiv.innerHTML = `<strong>Результат:</strong> VPN условно надёжен, присутствуют риски.<br>Итоговый балл: ${score}`;
+      } else {
+        resultDiv.className = 'result bad';
+        resultDiv.innerHTML = `<strong>Результат:</strong> Использование VPN небезопасно.<br>Итоговый балл: ${score}`;
+      }
+    }
+
+    function resetForm() {
+      questions.forEach((_, index) => {
+        const inputs = document.querySelectorAll(`input[name="q${index}"]`);
+        inputs.forEach(input => input.checked = false);
+      });
+
+      document.getElementById('result').style.display = 'none';
+      document.getElementById('resetBtn').style.display = 'none';
+    }
+}
       });
 
       const resultDiv = document.getElementById('result');
